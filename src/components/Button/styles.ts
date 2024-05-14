@@ -1,10 +1,11 @@
 import styled from "styled-components/native";
 
 export const Container = styled.Pressable`
-	background-color: ${({ theme }) => theme.colors.gray200};
+	background-color: ${({ theme, disabled }) => theme.colors.gray200};
 	align-items: center;
 	border-radius: 8px;
 	padding: 16px;
+	opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `;
 
 export const Label = styled.Text`
