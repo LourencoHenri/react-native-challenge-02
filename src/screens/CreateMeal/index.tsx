@@ -9,6 +9,7 @@ import {
 	DietButton,
 	FormSubset,
 	InputLabel,
+	ErrorText,
 	Container,
 	TextArea,
 	Content,
@@ -16,30 +17,25 @@ import {
 	Input,
 	Title,
 	Form,
-	ErrorText,
 } from "./styles";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
+import { MealProps, MealsContext } from "src/contexts/mealsContext";
+import { useNavigation } from "@react-navigation/native";
+import { useContext, useState } from "react";
 import { Button } from "@components/Button";
 import { isValid, parse } from "date-fns";
 import theme from "@theme/index";
-import { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-
-interface MealFormProps {
-	name: string;
-	description: string;
-	date: string;
-	time: string;
-	onDiet: boolean | null;
-}
 
 export function CreateMeal() {
 	const insets = useSafeAreaInsets();
 
-	const [onDiet, setOnDiet] = useState<boolean | null>(true);
+	const { handleCreateMeal } = useContext(MealsContext);
+
+	const navigation = useNavigation();
 
 	const mealFormSchema = Yup.object().shape({
 		name: Yup.string()
@@ -67,20 +63,19 @@ export function CreateMeal() {
 		onDiet: Yup.boolean().required(),
 	});
 
-	const initialMealForm: MealFormProps = {
-		name: "Macarrão",
-		description: "Macarrão com molho de tomate",
-		date: "13/05/2024",
-		time: "21:45",
-		onDiet: onDiet,
+	const initialMealForm: MealProps = {
+		name: "",
+		description: "",
+		date: "",
+		time: "",
+		onDiet: undefined,
 	};
 
-	//
-
-	const handleOnDiet = (state: boolean | null) => {
-		console.log(state);
-		setOnDiet(state);
-	};
+	function handleSubmit(values: MealProps) {
+		console.log(values);
+		handleCreateMeal(values);
+		navigation.navigate("Home" as never);
+	}
 
 	return (
 		<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -100,16 +95,17 @@ export function CreateMeal() {
 				<Content>
 					<Formik
 						initialValues={initialMealForm}
-						onSubmit={(values) => console.log(values)}
+						onSubmit={(values: MealProps) => handleSubmit(values)}
 						validationSchema={mealFormSchema}
 					>
 						{({
+							setFieldValue,
+							handleSubmit,
 							handleChange,
 							handleBlur,
-							handleSubmit,
+							touched,
 							values,
 							errors,
-							touched,
 						}) => (
 							<Form>
 								<FormContent>
@@ -182,12 +178,9 @@ export function CreateMeal() {
 										<InputLabel>Está dentro da dieta?</InputLabel>
 										<DietFormSubset>
 											<DietButton
-												onPress={() => {
-													handleOnDiet(true);
-													handleChange("onDiet");
-												}}
+												onPress={() => setFieldValue("onDiet", true)}
 												style={
-													onDiet === true
+													values.onDiet === true
 														? {
 																backgroundColor: theme.colors.greenLight,
 																borderWidth: 1,
@@ -203,9 +196,9 @@ export function CreateMeal() {
 											</DietButton>
 
 											<DietButton
-												onPress={() => handleOnDiet(false)}
+												onPress={() => setFieldValue("onDiet", false)}
 												style={
-													onDiet === false
+													values.onDiet === false
 														? {
 																backgroundColor: theme.colors.redLight,
 																borderWidth: 1,
@@ -226,7 +219,7 @@ export function CreateMeal() {
 								<Button
 									label="Cadastrar refeição"
 									disabled={!errors ? true : false}
-									onPress={() => console.log()}
+									onPress={handleSubmit}
 								/>
 							</Form>
 						)}

@@ -24,8 +24,8 @@ export default function Navigation() {
 						headerShown: false,
 					}}
 				>
-					<Stack.Screen name="CreateMeal" component={CreateMeal} />
 					<Stack.Screen name="Home" component={Home} />
+					<Stack.Screen name="CreateMeal" component={CreateMeal} />
 					<Stack.Screen name="Statistics" component={Statistics} />
 				</Stack.Navigator>
 			</NavigationContainer>

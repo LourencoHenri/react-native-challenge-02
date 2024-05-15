@@ -12,6 +12,7 @@ import {
 import Navigation from "src/navigation";
 import { Loading } from "@components/Loading";
 import { StatusBar } from "expo-status-bar";
+import { MealsContextProvider } from "src/contexts/mealsContext";
 
 export default function App() {
 	const [fontsLoaded] = useFonts({ NunitoSans_400Regular, NunitoSans_700Bold });
@@ -20,9 +21,11 @@ export default function App() {
 		<SafeAreaProvider style={styles.container}>
 			<StatusBar style="dark" />
 			<ThemeProvider theme={theme}>
-				<View style={styles.container}>
-					{fontsLoaded ? <Navigation /> : <Loading />}
-				</View>
+				<MealsContextProvider>
+					<View style={styles.container}>
+						{fontsLoaded ? <Navigation /> : <Loading />}
+					</View>
+				</MealsContextProvider>
 			</ThemeProvider>
 		</SafeAreaProvider>
 	);

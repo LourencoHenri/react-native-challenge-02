@@ -1,27 +1,21 @@
 import {
-	Container,
-	Time,
 	Description,
-	Status,
+	Container,
 	Indicator,
 	Divider,
+	Status,
+	Time,
 } from "./styles";
 
-interface MealProps {
-	time?: Date;
-	description?: string;
-	onDiet?: boolean;
-}
+import { MealProps } from "src/contexts/mealsContext";
 
-export function Meal({}: MealProps) {
+export function Meal({ name, description, date, time, onDiet }: MealProps) {
 	return (
 		<Container>
-			<Time>20:00</Time>
+			<Time>{time}</Time>
 			<Divider />
-			<Description>Frango Assado</Description>
-			<Indicator>
-				<Status />
-			</Indicator>
+			<Description>{name}</Description>
+			<Indicator>{onDiet && <Status onDiet={onDiet} />}</Indicator>
 		</Container>
 	);
 }

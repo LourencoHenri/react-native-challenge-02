@@ -1,5 +1,9 @@
 import styled from "styled-components/native";
 
+interface StatusProps {
+	onDiet: boolean;
+}
+
 export const Container = styled.View`
 	flex-direction: row;
 	display: flex;
@@ -35,24 +39,11 @@ export const Indicator = styled.View`
 	justify-content: center;
 `;
 
-export const Status = styled.View`
+export const Status = styled.View<StatusProps>`
 	width: 14px;
 	height: 14px;
 	border-radius: 14px;
 	align-items: center;
-	background-color: ${({ theme }) => theme.colors.greenMid};
+	background-color: ${({ theme, onDiet }) =>
+		onDiet ? theme.colors.greenMid : theme.colors.redMid};
 `;
-
-// export const Content = styled.View`
-// 	gap: 8px;
-// `;
-
-// export const Date = styled.Text`
-// 	font-family: ${({ theme }) => theme.fontFamily.bold};
-// 	font-size: ${({ theme }) => theme.fontSize.xs};
-// 	color: ${({ theme }) => theme.colors.gray100};
-// `;
-
-// export const MealsList = styled.View`
-// 	gap: 8px;
-// `;
